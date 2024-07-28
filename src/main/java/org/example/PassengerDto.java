@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 //Класс для передачи пассажиров
 public class PassengerDto {
     private Long id;
+    private Boolean survived;
     private Integer pclass; // Здесь числовое значение
     private String name;
     private String sex;
@@ -13,9 +14,10 @@ public class PassengerDto {
     private BigDecimal fare;
 
 
-    public PassengerDto(Long id,Integer pclass, String name, String sex, Double age, Integer siblingsSpouses,
+    public PassengerDto(Long id,Boolean survived, Integer pclass, String name, String sex, Double age, Integer siblingsSpouses,
                         Integer parentChildren, BigDecimal fare ) {
         this.id = id;
+        this.survived = survived;
         this.pclass = pclass;
         this.name = name;
         this.sex = sex;
@@ -26,12 +28,21 @@ public class PassengerDto {
 
     }
 
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Boolean getSurvived() {
+        return survived;
+    }
+
+    public void setSurvived(Boolean survived) {
+        this.survived = survived;
     }
 
     public String getName() {

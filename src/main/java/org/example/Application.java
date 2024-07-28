@@ -2,6 +2,7 @@ package org.example;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,16 +19,14 @@ public class Application {
         this.service = service;
     }
 
-    @GetMapping("/") //Обрабатывает GET запросы
-    public List<Passenger> home(){ //возвращает список всех пассажиров
-        return service.getAllPassenger();
-    }
+
 
     @GetMapping("/passengers")
-    public List<PassengerDto> getAllPassengers() { //возвращает список всех пассажиров в вижу DTO  с преображением pclss в числовое значение
+    public List<PassengerDto> getAllPassengers() { //возвращает список всех пассажиров в вижу DTO  с преображением pclss в числовое значение и вывод в JSON
         return service.getAllPassenger().stream()
                 .map(passenger -> new PassengerDto(
                         passenger.getId(),
+                        passenger.getSurvived(),
                         passenger.getPclass().toDbValue(),
                         passenger.getName(),
                         passenger.getSex(),

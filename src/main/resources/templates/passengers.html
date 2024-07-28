@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Passenger</title>
+    <style>
+        table {
+        width: 100%;
+        border-collapse: collapse;
+        }
+        table, th, td {
+        border: 1px solid black;
+        }
+        th, td {
+        padding: 15px;
+        text-align: left;
+        }
+        th {
+        background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+<h1>Passengers List</h1>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Survived</th>
+        <th>Pclass</th>
+        <th>Name</th>
+        <th>Sex</th>
+        <th>Age</th>
+        <th>Siblings/Spouses Aboard</th>
+        <th>Parent/Children Aboard</th>
+        <th>Fare</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="passenger : ${passengers}">
+        <td th:text="${passenger.id}"></td>
+        <td th:text="${passenger.survived}"></td>
+        <td th:text="${passenger.pclass}"></td>
+        <td th:text="${passenger.name}"></td>
+        <td th:text="${passenger.sex}"></td>
+        <td th:text="${passenger.age}"></td>
+        <td th:text="${passenger.siblingsSpouses}"></td>
+        <td th:text="${passenger.parentChildren}"></td>
+        <td th:text="${passenger.fare}"></td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
