@@ -39,6 +39,7 @@ public class PassengerController {
         model.addAttribute("passengers", passengers);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", passengerPage.getTotalPages());
+        model.addAttribute("pageSize", size); //добавляем размер страницы в модель (выбор количества записей на странице)
         return "passengers";
     }
 
