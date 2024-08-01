@@ -24,6 +24,9 @@
 <h1>Passengers List</h1>
 
 <form method="get"th:action="@{/}">
+    <label for="searchName">Search by Name:</label>
+    <input type="text" id="searchName" name="searchName" th:value="${searchName}" placeholder="Enter name"/>
+    <button type="submit">Search</button>
     <label for="size">Rows per page:</label>
     <select name="size" id="size" onchange="this.form.submit()">
         <option th:value="25" th:text="'25'" th:selected="${pageSize == 25}"></option>
@@ -34,6 +37,8 @@
     <input type="hidden" name="=sortField" th:value="${sortField}"/>
     <input type="hidden" name="sortDir" th:value="${sortDir}">
 </form>
+
+
 <table>
     <thead>
     <tr>
@@ -43,16 +48,16 @@
         <th>
             Name
             <span class="sort-arrows">
-                <a th:href="@{|/?page=${currentPage}&size=${pageSize}&sortField=name&sortDir=asc|}" class="sort-arrow">&#9650;</a>
-                <a th:href="@{|/?page=${currentPage}&size=${pageSize}&sortField=name&sortDir=desc|}" class="sort-arrow">&#9660;</a>
+                <a th:href="@{|/?page=${currentPage}&size=${pageSize}&sortField=name&sortDir=asc&searchName=${searchName}|}" class="sort-arrow">&#9650;</a>
+                <a th:href="@{|/?page=${currentPage}&size=${pageSize}&sortField=name&sortDir=desc&searchName=${searchName}|}" class="sort-arrow">&#9660;</a>
             </span>
         </th>
         <th>Sex</th>
         <th>
             Age
             <span class="sort-arrows">
-                <a th:href="@{|/?page=${currentPage}&size=${pageSize}&sortField=age&sortDir=asc|}"class="sort-arrows">&#9650;</a>
-                <a th:href="@{|/?page=${currentPage}&size=${pageSize}&sortField=age&sortDir=desc|}"class="sort-arrows">&#9660;</a>
+                <a th:href="@{|/?page=${currentPage}&size=${pageSize}&sortField=age&sortDir=asc&searchName=${searchName}|}"class="sort-arrows">&#9650;</a>
+                <a th:href="@{|/?page=${currentPage}&size=${pageSize}&sortField=age&sortDir=desc&searchName=${searchName}|}"class="sort-arrows">&#9660;</a>
             </span>
         </th>
         <th>Siblings/Spouses Aboard</th>
@@ -60,8 +65,8 @@
         <th>
             Fare
             <span class="sort-arrows">
-                <a th:href="@{|/?page=${currentPage}&size=${pageSize}&sortField=fare&sortDir=asc|}"class="sort-arrows">&#9650;</a>
-                <a th:href="@{|/?page=${currentPage}&size=${pageSize}&sortField=fare&sortDir=desc|}"class="sort-arrows">&#9660;</a>
+                <a th:href="@{|/?page=${currentPage}&size=${pageSize}&sortField=fare&sortDir=asc&searchName=${searchName}|}"class="sort-arrows">&#9650;</a>
+                <a th:href="@{|/?page=${currentPage}&size=${pageSize}&sortField=fare&sortDir=desc&searchName=${searchName}|}"class="sort-arrows">&#9660;</a>
             </span>
         </th>
     </tr>
