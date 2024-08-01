@@ -31,6 +31,8 @@
         <option th:value="100" th:text="'100'" th:selected="${pageSize == 100}"></option>
     </select>
     <input type="hidden" name="page" th:value="${currentPage}"/>
+    <input type="hidden" name="=sortField" th:value="${sortField}"/>
+    <input type="hidden" name="sortDir" th:value="${sortDir}">
 </form>
 <table>
     <thead>
@@ -38,12 +40,30 @@
         <th>ID</th>
         <th>Survived</th>
         <th>Pclass</th>
-        <th>Name</th>
+        <th>
+            Name
+            <span class="sort-arrows">
+                <a th:href="@{|/?page=${currentPage}&size=${pageSize}&sortField=name&sortDir=asc|}" class="sort-arrow">&#9650;</a>
+                <a th:href="@{|/?page=${currentPage}&size=${pageSize}&sortField=name&sortDir=desc|}" class="sort-arrow">&#9660;</a>
+            </span>
+        </th>
         <th>Sex</th>
-        <th>Age</th>
+        <th>
+            Age
+            <span class="sort-arrows">
+                <a th:href="@{|/?page=${currentPage}&size=${pageSize}&sortField=age&sortDir=asc|}"class="sort-arrows">&#9650;</a>
+                <a th:href="@{|/?page=${currentPage}&size=${pageSize}&sortField=age&sortDir=desc|}"class="sort-arrows">&#9660;</a>
+            </span>
+        </th>
         <th>Siblings/Spouses Aboard</th>
         <th>Parent/Children Aboard</th>
-        <th>Fare</th>
+        <th>
+            Fare
+            <span class="sort-arrows">
+                <a th:href="@{|/?page=${currentPage}&size=${pageSize}&sortField=fare&sortDir=asc|}"class="sort-arrows">&#9650;</a>
+                <a th:href="@{|/?page=${currentPage}&size=${pageSize}&sortField=fare&sortDir=desc|}"class="sort-arrows">&#9660;</a>
+            </span>
+        </th>
     </tr>
     </thead>
     <tbody>
@@ -62,13 +82,13 @@
 </table>
 <<div>
     <span th:if="${currentPage > 0}">
-        <a th:href="@{|/?page=${currentPage - 1}&size=50|}">Previous</a>
+        <a th:href="@{|/?page=${currentPage - 1}&size=${pageSize}&sortField=${sortField}&sortDir=${sortDir}|}">Previous</a>
     </span>
     <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
-        <a th:href="@{|/?page=${i}&size=50|}" th:text="${i + 1}"></a>
+        <a th:href="@{|/?page=${i}&size=${pageSize}&sortField=${sortField}&sortDir=${sortDir}|}" th:text="${i + 1}"></a>
     </span>
     <span th:if="${currentPage < totalPages - 1}">
-        <a th:href="@{|/?page=${currentPage + 1}&size=50|}">Next</a>
+        <a th:href="@{|/?page=${currentPage + 1}&size=${pageSize}&sortField=${sortField}&sortDir=${sortDir}|}">Next</a>
     </span>
 </div>
 

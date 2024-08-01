@@ -3,6 +3,7 @@ package org.example;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,8 +23,12 @@ public class PassengerController {
     @GetMapping("/")
     public String home(@RequestParam(defaultValue = "0") int page,
                        @RequestParam(defaultValue = "50") int size,
+                       @RequestParam(defaultValue = "name") String sortField,// выбор поля для сортировки
+                       @RequestParam(defaultValue = "asc") String sortDir, // выюор сортировки по возр или убыв
                        Model model) {
-        Page<Passenger> passengerPage = service.getPassengers(PageRequest.of(page, size));
+        // Создаем объект сортировки, который определяет по какму полю сортировать и в каком направлении
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() : Sort.by(sortField).descending();
+        Page<Passenger> passengerPage = service.getPassengers(PageRequest.of(page, size, sort));
         List<PassengerDto> passengers = passengerPage.stream()
                 .map(passenger -> new PassengerDto(
                         passenger.getId(),
@@ -40,6 +45,7 @@ public class PassengerController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", passengerPage.getTotalPages());
         model.addAttribute("pageSize", size); //добавляем размер страницы в модель (выбор количества записей на странице)
+        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
         return "passengers";
     }
 
