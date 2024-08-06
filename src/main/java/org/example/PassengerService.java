@@ -7,7 +7,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service //Класс является сервисом (логикой) приложения
@@ -17,22 +20,38 @@ import java.util.stream.Collectors;
     public PassengerService(PassengerRepository repository){
         this.repository = repository;
     }
+    private static final Set<String> VALID_SORT_FIELDS = new HashSet<>(Arrays.asList("name", "age", "fare", "id"));
 
     public List<Passenger> getAllPassenger() {
         return repository.findAll();
     }
 
-    public Page <Passenger> getPassengers (int page, int size, String sortField, String sortDir, String searchName){
+    public Page <Passenger> getPassengers (int page, int size, String sortField, String sortDir, String searchName,
+                                           boolean filterSurvived, boolean filterAdult, boolean filterMale, boolean filterNoRelatives){
+
+        //Проверка sortField на null и пустоту, если так, устанавливает на name и проверим его допустимость
+        if (sortField == null || sortField.isEmpty() || !VALID_SORT_FIELDS.contains(sortField)){
+            sortField = "name";
+        }
         // Создаем объект сортировки, который определяет по какму полю сортировать и в каком направлении
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() : Sort.by(sortField).descending();
         //Объект, который включает в себя номер страницы, ее размер и параметры сортировки
         Pageable pageable = PageRequest.of(page, size, sort);
-        //Если искомое имя отсутсвует, то взвращаем все записи
-        if (searchName == null || searchName.isEmpty()){
-            return repository.findAll(pageable);
+
+        if(searchName == null || searchName.isEmpty()){
+            if (filterSurvived || filterAdult || filterMale || filterNoRelatives){
+                return repository.findFiltered(filterSurvived, filterAdult, filterMale, filterNoRelatives, pageable);
+            } else {
+                return repository.findAll(pageable);
+            }
         } else {
-            return repository.findByNameContainingIgnoreCase(searchName, pageable);
+            if (filterSurvived || filterAdult || filterMale || filterNoRelatives){
+                return repository.findFilterByName(searchName, filterSurvived, filterAdult, filterMale, filterNoRelatives, pageable);
+            } else {
+                return repository.findByNameContainingIgnoreCase(searchName, pageable);
+            }
         }
+
     }
 
 }

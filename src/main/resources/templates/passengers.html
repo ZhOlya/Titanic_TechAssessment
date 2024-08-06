@@ -26,38 +26,51 @@
 <form method="get"th:action="@{/}">
     <label for="searchName">Search by Name:</label>
     <input type="text" id="searchName" name="searchName" th:value="${searchName}" placeholder="Enter name"/>
-    <button type="submit">Search</button>
+
     <label for="size">Rows per page:</label>
     <select name="size" id="size" onchange="this.form.submit()">
         <option th:value="25" th:text="'25'" th:selected="${pageSize == 25}"></option>
         <option th:value="50" th:text="'50'" th:selected="${pageSize == 50}"></option>
         <option th:value="100" th:text="'100'" th:selected="${pageSize == 100}"></option>
     </select>
+
+    <label><input type="checkbox" name="filterSurvived" th:checked="${filterSurvived}"/>Show survived passengers</label>
+    <label><input type="checkbox" name="filterAdult" th:checked="${filterAdult}"/>Show adults (age > 16)</label>
+    <label><input type="checkbox" name="filterMale" th:checked="${filterMale}"/>Show male passengers</label>
+    <label><input type="checkbox" name="filterNoRelatives" th:checked="${filterNoRelatives}"/>Show passengers with no relatives</label>
+
     <input type="hidden" name="page" th:value="${currentPage}"/>
-    <input type="hidden" name="=sortField" th:value="${sortField}"/>
-    <input type="hidden" name="sortDir" th:value="${sortDir}">
+    <input type="hidden" name="sortField" th:value="${sortField}"/>
+    <input type="hidden" name="sortDir" th:value="${sortDir}"/>
+
+    <button type="submit">Apply filters</button>
 </form>
 
 
 <table>
     <thead>
     <tr>
-        <th>ID</th>
+        <th>
+            ID
+            <span class="sort-arrows">
+                <a th:href="@{|/?page=${currentPage}&size=${pageSize}&sortField=id&sortDir=asc&searchName=${searchName}&filterSurvived=${filterSurvived}&filterAdult=${filterAdult}&filterMale=${filterMale}&filterNoRelatives=${filterNoRelatives}|}" class="sort-arrow">&#9650;</a>
+                <a th:href="@{|/?page=${currentPage}&size=${pageSize}&sortField=id&sortDir=desc&searchName=${searchName}&filterSurvived=${filterSurvived}&filterAdult=${filterAdult}&filterMale=${filterMale}&filterNoRelatives=${filterNoRelatives}|}" class="sort-arrow">&#9660;</a>
+            </span></th>
         <th>Survived</th>
         <th>Pclass</th>
         <th>
             Name
             <span class="sort-arrows">
-                <a th:href="@{|/?page=${currentPage}&size=${pageSize}&sortField=name&sortDir=asc&searchName=${searchName}|}" class="sort-arrow">&#9650;</a>
-                <a th:href="@{|/?page=${currentPage}&size=${pageSize}&sortField=name&sortDir=desc&searchName=${searchName}|}" class="sort-arrow">&#9660;</a>
+                <a th:href="@{|/?page=${currentPage}&size=${pageSize}&sortField=name&sortDir=asc&searchName=${searchName}&filterSurvived=${filterSurvived}&filterAdult=${filterAdult}&filterMale=${filterMale}&filterNoRelatives=${filterNoRelatives}|}" class="sort-arrow">&#9650;</a>
+                <a th:href="@{|/?page=${currentPage}&size=${pageSize}&sortField=name&sortDir=desc&searchName=${searchName}&filterSurvived=${filterSurvived}&filterAdult=${filterAdult}&filterMale=${filterMale}&filterNoRelatives=${filterNoRelatives}|}" class="sort-arrow">&#9660;</a>
             </span>
         </th>
         <th>Sex</th>
         <th>
             Age
             <span class="sort-arrows">
-                <a th:href="@{|/?page=${currentPage}&size=${pageSize}&sortField=age&sortDir=asc&searchName=${searchName}|}"class="sort-arrows">&#9650;</a>
-                <a th:href="@{|/?page=${currentPage}&size=${pageSize}&sortField=age&sortDir=desc&searchName=${searchName}|}"class="sort-arrows">&#9660;</a>
+                <a th:href="@{|/?page=${currentPage}&size=${pageSize}&sortField=age&sortDir=asc&searchName=${searchName}&filterSurvived=${filterSurvived}&filterAdult=${filterAdult}&filterMale=${filterMale}&filterNoRelatives=${filterNoRelatives}|}" class="sort-arrow">&#9650;</a>
+                <a th:href="@{|/?page=${currentPage}&size=${pageSize}&sortField=age&sortDir=desc&searchName=${searchName}&filterSurvived=${filterSurvived}&filterAdult=${filterAdult}&filterMale=${filterMale}&filterNoRelatives=${filterNoRelatives}|}" class="sort-arrow">&#9660;</a>
             </span>
         </th>
         <th>Siblings/Spouses Aboard</th>
@@ -65,8 +78,8 @@
         <th>
             Fare
             <span class="sort-arrows">
-                <a th:href="@{|/?page=${currentPage}&size=${pageSize}&sortField=fare&sortDir=asc&searchName=${searchName}|}"class="sort-arrows">&#9650;</a>
-                <a th:href="@{|/?page=${currentPage}&size=${pageSize}&sortField=fare&sortDir=desc&searchName=${searchName}|}"class="sort-arrows">&#9660;</a>
+                <a th:href="@{|/?page=${currentPage}&size=${pageSize}&sortField=fare&sortDir=asc&searchName=${searchName}&filterSurvived=${filterSurvived}&filterAdult=${filterAdult}&filterMale=${filterMale}&filterNoRelatives=${filterNoRelatives}|}" class="sort-arrow">&#9650;</a>
+                <a th:href="@{|/?page=${currentPage}&size=${pageSize}&sortField=fare&sortDir=desc&searchName=${searchName}&filterSurvived=${filterSurvived}&filterAdult=${filterAdult}&filterMale=${filterMale}&filterNoRelatives=${filterNoRelatives}|}" class="sort-arrow">&#9660;</a>
             </span>
         </th>
     </tr>
@@ -85,15 +98,19 @@
     </tr>
     </tbody>
 </table>
-<<div>
+
+<div>
     <span th:if="${currentPage > 0}">
-        <a th:href="@{|/?page=${currentPage - 1}&size=${pageSize}&sortField=${sortField}&sortDir=${sortDir}|}">Previous</a>
+        <!-- Изменено: добавлены параметры фильтров в ссылки для пагинации -->
+        <a th:href="@{|/?page=${currentPage - 1}&size=${pageSize}&sortField=${sortField}&sortDir=${sortDir}&searchName=${searchName}&filterSurvived=${filterSurvived}&filterAdult=${filterAdult}&filterMale=${filterMale}&filterNoRelatives=${filterNoRelatives}|}">Previous</a>
     </span>
     <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
-        <a th:href="@{|/?page=${i}&size=${pageSize}&sortField=${sortField}&sortDir=${sortDir}|}" th:text="${i + 1}"></a>
+        <!-- Изменено: добавлены параметры фильтров в ссылки для пагинации -->
+        <a th:href="@{|/?page=${i}&size=${pageSize}&sortField=${sortField}&sortDir=${sortDir}&searchName=${searchName}&filterSurvived=${filterSurvived}&filterAdult=${filterAdult}&filterMale=${filterMale}&filterNoRelatives=${filterNoRelatives}|}" th:text="${i + 1}"></a>
     </span>
     <span th:if="${currentPage < totalPages - 1}">
-        <a th:href="@{|/?page=${currentPage + 1}&size=${pageSize}&sortField=${sortField}&sortDir=${sortDir}|}">Next</a>
+        <!-- Изменено: добавлены параметры фильтров в ссылки для пагинации -->
+        <a th:href="@{|/?page=${currentPage + 1}&size=${pageSize}&sortField=${sortField}&sortDir=${sortDir}&searchName=${searchName}&filterSurvived=${filterSurvived}&filterAdult=${filterAdult}&filterMale=${filterMale}&filterNoRelatives=${filterNoRelatives}|}">Next</a>
     </span>
 </div>
 
